@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div style="display:flex; gap:40px; flex-wrap:wrap; background:#fff; padding:25px; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.08);">
+
+    <!-- LEFT: PRODUCT IMAGES -->
+    <div style="flex:1; min-width:280px;">
+        <div style="border:1px solid #eee; padding:10px; border-radius:8px; text-align:center;">
+            {% if images %}
+                <img id="mainImage"
+                     src="{{ url_for('static', filename='uploads/' ~ images[0].filename) }}"
+                     style="width:100%; max-height:350px; object-fit:contain;">
+            {% endif %}
+        </div>
+
+        <!-- Thumbnail images -->
+        <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
+            {% for img in images %}
+                <img src="{{ url_for('static', filename='uploads/' ~ img.filename) }}"
+                     width="70"
+                     style="cursor:pointer; border-radius:5px; border:1px solid #ddd;"
+                     onclick="changeImage(this)">
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- RIGHT: PRODUCT DETAILS -->
+    <div style="flex:1; min-width:280px;">
+        <h2 style="margin-bottom:10px;">{{ product.name }}</h2>
+
+        <p style="font-size:22px; color:#e53935; font-weight:bold;">₹ {{ product.price }}</p>
+
+        <p><strong>Category:</strong>
+            <span style="background:#f1f1f1; padding:5px 10px; border-radius:15px;">
+                {{ product.category.title() }}
+            </span>
+        </p>
+
+        <p style="margin-top:15px; line-height:1.6; color:#555;">
+            {{ product.description }}
+        </p>
+
+        {% if product.stock > 0 %}
+            <p style="color:green; font-weight:bold;">✔ In Stock </p>
+
+            <div style="margin-top:15px;">
+                <a href="{{ url_for('cart.add_to_cart', product_id=product.id) }}"
+                   style="background:#28a745; color:white; padding:10px 18px;
+                          text-decoration:none; border-radius:5px; margin-right:10px;">
+                    Add to Cart
+                </a>
+
+                <a href="{{ url_for('products.buy_now', product_id=product.id) }}"
+                   style="background:#ff9800; color:white; padding:10px 18px;
+                          text-decoration:none; border-radius:5px;">
+                    Buy Now
+                </a>
+            </div>
+        {% else %}
+            <p style="color:red; font-weight:bold;">Out of Stock</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- RELATED PRODUCTS -->
+{% if related_products %}
+<h3 style="margin-top:40px;">Related Products</h3>
+
+<div style="display:flex; gap:20px; flex-wrap:wrap;">
+    {% for item in related_products %}
+    <div onclick="window.location.href='/product/{{ item.id }}'"
+         style="width:200px; background:#fff; padding:10px; border-radius:8px;
+                box-shadow:0 2px 6px rgba(0,0,0,0.08); cursor:pointer;">
+
+        {% if item.images %}
+        <img src="{{ url_for('static', filename='uploads/' ~ item.images[0].filename) }}"
+             style="width:100%; height:150px; object-fit:cover; border-radius:6px;">
+        {% endif %}
+
+        <h4 style="margin:8px 0 4px;">{{ item.name }}</h4>
+        <p style="color:#e53935; font-weight:bold;">₹ {{ item.price }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<script>
+function changeImage(element) {
+    document.getElementById("mainImage").src = element.src;
+}
+</script>
+
+{% endblock %}

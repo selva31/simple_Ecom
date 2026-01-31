@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div style="max-width:700px; margin:auto; background:#ffffff; padding:30px;
+            border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+
+    <h2 style="text-align:center; margin-bottom:25px;">Add New Product</h2>
+
+    <form method="POST" enctype="multipart/form-data" style="display:flex; flex-direction:column; gap:15px;">
+
+        <div>
+            <label><strong>Product Name</strong></label>
+            <input name="name" required
+                   style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc;">
+        </div>
+
+        <div style="display:flex; gap:15px;">
+            <div style="flex:1;">
+                <label><strong>Price (₹)</strong></label>
+                <input name="price" type="number" step="0.01" required
+                       style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc;">
+            </div>
+
+            <div style="flex:1;">
+                <label><strong>Stock Quantity</strong></label>
+                <input name="stock" type="number" required
+                       style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc;">
+            </div>
+        </div>
+
+        <div>
+            <label><strong>Category</strong></label>
+            <select name="category" required
+                    style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc;">
+                <option value="shoe">Shoe</option>
+                <option value="perfume">Perfume</option>
+                <option value="watch">Watch</option>
+                <option value="books">Books</option>
+            </select>
+        </div>
+
+        <div>
+            <label><strong>Product Description</strong></label>
+            <textarea name="description" rows="4" required
+                      style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; resize:none;"
+                      placeholder="Write product details, features, material, etc..."></textarea>
+        </div>
+
+        <div>
+            <label><strong>Upload Product Images</strong></label>
+            <input type="file" name="images" multiple required
+                   style="width:100%; padding:8px;">
+            <small style="color:gray;">You can select multiple images</small>
+        </div>
+
+        <button type="submit"
+                style="background:#222; color:white; padding:12px;
+                       border:none; border-radius:6px; font-size:16px;
+                       cursor:pointer; transition:0.3s;">
+            Add Product
+        </button>
+
+    </form>
+</div>
+
+{% endblock %}

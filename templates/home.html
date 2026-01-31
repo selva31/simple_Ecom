@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px;">
+    {% for product in products %}
+    <div class="product-card"
+         onclick="goToDetail({{ product.id }})"
+         style="border:1px solid #ccc; padding:15px; width:250px; cursor:pointer;
+                background:#fff; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+
+        <h3>{{ product.name }}</h3>
+        <p><strong>Price:</strong> ₹{{ product.price }}</p>
+        <p>{{ product.description[:100] }}{% if product.description|length > 100 %}...{% endif %}</p>
+
+        <!-- Images -->
+        <div style="display:flex; gap:5px; flex-wrap:wrap; margin-bottom:10px;">
+            {% for img in product.images %}
+                <img src="{{ url_for('static', filename='uploads/' ~ img.filename) }}"
+                     width="80" style="border-radius:5px; border:1px solid #ddd;">
+            {% endfor %}
+        </div>
+
+        {% if product.stock > 0 %}
+            <span style="color:green; font-weight:bold;">In Stock</span><br><br>
+
+            <!-- Buttons (STOP card click here) -->
+            <a href="{{ url_for('cart.add_to_cart', product_id=product.id) }}"
+               onclick="event.stopPropagation();"
+               style="text-decoration:none; color:#28a745; font-weight:bold;">
+               Add to Cart
+            </a>
+            |
+            <a href="{{ url_for('products.buy_now', product_id=product.id) }}"
+               onclick="event.stopPropagation();"
+               style="text-decoration:none; color:#ff9800; font-weight:bold;">
+               Buy Now
+            </a>
+
+        {% else %}
+            <span style="color:red; font-weight:bold;">Out of Stock</span>
+        {% endif %}
+
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+function goToDetail(productId) {
+    window.location.href = "/product/" + productId;
+}
+</script>
+
+{% endblock %}

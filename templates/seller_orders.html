@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Orders Details</h2>
+
+<table border="1" cellpadding="8">
+<tr>
+    <th>Product</th>
+    <th>Buyer</th>
+    <th>Qty</th>
+    <th>Total</th>
+    <th>Status</th>
+    <th>Update</th>
+</tr>
+
+{% for order in orders %}
+<tr>
+    <td>{{ order.product.name }}</td>
+    <td>{{ order.buyer.name }} ({{ order.buyer.email }})</td>
+    <td>{{ order.quantity }}</td>
+    <td>₹{{ order.total_price }}</td>
+    <td>{{ order.status }}</td>
+    <td>
+        <form method="POST" action="{{ url_for('products.update_order_status', order_id=order.id) }}">
+            <select name="status">
+                <option>Pending</option>
+                <option>Shipped</option>
+                <option>Delivered</option>
+            </select>
+            <button type="submit">Update</button>
+        </form>
+    </td>
+</tr>
+{% endfor %}
+</table>
+
+{% endblock %}
