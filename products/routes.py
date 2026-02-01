@@ -3,6 +3,7 @@ from extensions import db
 from models import Product, ProductImage, Order
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
+from sqlalchemy import or_
 import os, io, base64
 import matplotlib
 matplotlib.use('Agg')
@@ -230,3 +231,24 @@ def product_detail(product_id):
         related_products=related_products
     )
 
+@products_bp.route("/search")
+def search():
+    query = request.args.get("q", "").strip()
+
+    if query:
+        products = Product.query.filter(
+            or_(
+                Product.name.ilike(f"%{query}%"),
+                Product.category.ilike(f"%{query}%"),
+                Product.description.ilike(f"%{query}%")
+            )
+        ).all()
+    else:
+        products = []
+
+    return render_template("home.html", products=products, search_query=query)
+
+@products_bp.route("/category/<string:category_name>")
+def category_products(category_name):
+    products = Product.query.filter_by(category=category_name.lower()).all()
+    return render_template("home.html", products=products, selected_category=category_name)
